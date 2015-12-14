@@ -23,13 +23,12 @@ function validateTestsJSON(callback)
 	        fs.close(fd);
 
 	        try {
-				JSON.parse(data);
 				validJSON = JSON.parse(data);
-				callback(data);
+				callback(validJSON);
 	        }
 	        catch(err) {
-	        	console.log("Incorrect JSON Format");
-	        	return false;
+	        	console.log("File is not written in a valid JSON Format");
+	        	callback(false);
 	        }
 	        
 	    });
@@ -38,7 +37,50 @@ function validateTestsJSON(callback)
 
 function validateTestFormat(validJSON)
 {
-	console.log(validJSON);
+	if(!validJSON)
+	{
+		return false;
+	}
+	else
+	{
+		console.log(validJSON);
+		if(typeof validJSON.name == "string" && typeof validJSON.url == "string" && typeof validJSON.testgroups == "object" && typeof validJSON.port == "number")
+		{
+			for (var i = validJSON.testgroups.length - 1; i >= 0; i--) 
+			{
+				if(typeof validJSON.testgroups[i].groupname == "string" && typeof validJSON.testgroups[i].tests == "object")
+				{
+					for (var j = validJSON.testgroups[i].tests.length - 1; j >= 0; j--)
+					{
+						if( typeof validJSON.testgroups[i].tests[j].name == "string" && 
+							typeof validJSON.testgroups[i].tests[j].uri == "string" && 
+							typeof validJSON.testgroups[i].tests[j].input == "object" && 
+							typeof validJSON.testgroups[i].tests[j].output == "object" && 
+							typeof validJSON.testgroups[i].tests[j].input.data == "object" && 
+							typeof validJSON.testgroups[i].tests[j].input.data.username == "string" && 
+							typeof validJSON.testgroups[i].tests[j].input.data.password == "string" &&
+							typeof validJSON.testgroups[i].tests[j].output.responseStatus == "string") 
+						{
+							console.log("Correct JSON Format");
+						}
+						else
+						{
+							console.log("Invalid JSON Format");
+						}
+					}
+				}
+				else
+				{
+					console.log("Invalid JSON Format");
+				}
+			}	
+		}
+		else
+		{
+			console.log("Invalid JSON Format");
+		}
+	}
+	
 }
 
 validateTestsJSON(validateTestFormat);

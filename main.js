@@ -1,7 +1,8 @@
 "use strict";
+var testRunner = require("./testrunner.js");
 var fs=require('fs');
 var data = 0;
-var validJSON = null;
+var testsJSON = null;
 
 function validateTestsJSON(callback)
 {
@@ -23,7 +24,7 @@ function validateTestsJSON(callback)
 	        fs.close(fd);
 
 	        try {
-				validJSON = JSON.parse(data);
+				var validJSON = JSON.parse(data);
 				callback(validJSON);
 	        }
 	        catch(err) {
@@ -43,7 +44,6 @@ function validateTestFormat(validJSON)
 	}
 	else
 	{
-		console.log(validJSON);
 		if(typeof validJSON.name == "string" && typeof validJSON.url == "string" && typeof validJSON.testgroups == "object" && typeof validJSON.port == "number")
 		{
 			for (var i = validJSON.testgroups.length - 1; i >= 0; i--) 
@@ -55,11 +55,7 @@ function validateTestFormat(validJSON)
 						if( typeof validJSON.testgroups[i].tests[j].name == "string" && 
 							typeof validJSON.testgroups[i].tests[j].uri == "string" && 
 							typeof validJSON.testgroups[i].tests[j].input == "object" && 
-							typeof validJSON.testgroups[i].tests[j].output == "object" && 
-							typeof validJSON.testgroups[i].tests[j].input.data == "object" && 
-							typeof validJSON.testgroups[i].tests[j].input.data.username == "string" && 
-							typeof validJSON.testgroups[i].tests[j].input.data.password == "string" &&
-							typeof validJSON.testgroups[i].tests[j].output.responseStatus == "string") 
+							typeof validJSON.testgroups[i].tests[j].output == "object") 
 						{
 							console.log("Correct JSON Format");
 						}
@@ -74,6 +70,8 @@ function validateTestFormat(validJSON)
 					console.log("Invalid JSON Format");
 				}
 			}	
+			testsJSON = validJSON;
+			runTests(testsJSON);
 		}
 		else
 		{
@@ -81,6 +79,19 @@ function validateTestFormat(validJSON)
 		}
 	}
 	
+}
+
+function runTests(testsJSON)
+{
+	for (var i = testsJSON.testgroups.length - 1; i >= 0; i--) 
+	{
+		for (var j = testsJSON.testgroups[i].tests.length - 1; j >= 0; j--)
+		{
+			var test = new testRunner();
+
+			test.run(testsJSON.testgroups[i].tests[j].name, testsJSON.url,testsJSON.port,testsJSON.testgroups[i].tests[j].uri,testsJSON.testgroups[i].tests[j].input,testsJSON.testgroups[i].tests[j].output);
+		}
+	}
 }
 
 validateTestsJSON(validateTestFormat);

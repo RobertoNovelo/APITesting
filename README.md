@@ -13,8 +13,9 @@ The main.js file will run the tests and print the results in the console.
 ##tests.json format
 ```
   {
-    "url":"http://localhost:8888/",
+    "url":"127.0.0.1",
     "name":"APITesting",
+    "port":8888,
     "testgroups":
     [
       {
@@ -26,11 +27,9 @@ The main.js file will run the tests and print the results in the console.
             "uri":"user/register",
             "input":
             {
-              "data":
-              {
-                "username":"test",
-                "password":"x"
-              }
+
+              "username":"test",
+              "password":"x"
             },
             "output":
             {

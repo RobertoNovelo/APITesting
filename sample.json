@@ -1,0 +1,55 @@
+  {
+      "url":"127.0.0.1",
+      "name":"APITesting",
+      "port": 80,
+      "testgroups":
+      [
+        {
+          "groupname":"User API",
+          "tests":
+          [
+            {
+              "name":"User Register",
+              "uri":"/user/register",
+              "input":
+              {
+                "username":"test",
+                "password":"x"
+              },
+              "output":
+              {
+                "responseStatus":"OK"
+              }
+            },
+            {
+              "name":"User Register",
+              "uri":"/user/login",
+              "input":
+              {
+                "username":"test",
+                "password":"x"
+              },
+              "output":
+              {
+                "responseStatus":"OK"
+              }
+            },
+            {
+              "name":"User Register",
+              "uri":"/scanner/login",
+              "input":
+              {
+                "username":"aldirrix",
+                "password":"novelo",
+                "timestamp":32323232,
+                "pushToken":"sdasdasdasdsadsd"
+              },
+              "output":
+              {
+                "responseStatus":"OK"
+              }
+            }
+          ]
+        }
+      ]
+    }
